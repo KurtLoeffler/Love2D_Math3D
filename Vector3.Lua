@@ -264,6 +264,7 @@ end
 
 Vector3_T = ffi.metatype("Vector3", Vector3)
 Vector3.default = Vector3_T()
+Vector3.one = Vector3_T(1, 1, 1)
 Vector3.right = Vector3_T(1, 0, 0)
 Vector3.left = Vector3_T(-1, 0, 0)
 Vector3.up = Vector3_T(0, 1, 0)

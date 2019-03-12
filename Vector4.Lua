@@ -218,5 +218,6 @@ end
 Vector4_T = ffi.metatype("Vector4", Vector4)
 tempVector4 = Vector4_T()
 Vector4.default = Vector4_T()
+Vector4.one = Vector4_T(1, 1, 1, 1)
 
 return Vector4_T
