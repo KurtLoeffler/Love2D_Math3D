@@ -305,7 +305,7 @@ function Matrix4.isMatrix4(arg)
 end
 
 function Matrix4.__mul(v1, v2)
-	return Matrix4.multiply(v1, v2)
+	return Matrix4.multiply(v1, v2, false)
 end
 
 function Matrix4.__eq(v1, v2)
