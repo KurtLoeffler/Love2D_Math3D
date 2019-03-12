@@ -91,6 +91,8 @@ function Matrix4.createIdentity()
 end
 
 function Matrix4.multiply(a, b, inline)
+	if inline == nil then inline = true end
+
 	local out = inline and tempMatrix or Matrix4()
 	
 	out.m0  = a.m0  * b.m0 + a.m1  * b.m4 + a.m2  * b.m8  + a.m3  * b.m12
@@ -118,6 +120,8 @@ function Matrix4.multiply(a, b, inline)
 end
 
 function Matrix4.invert(a, inline)
+	if inline == nil then inline = true end
+	
 	local out = inline and tempMatrix or Matrix4()
 	
 	out.m0  =  a.m5 * a.m10 * a.m15 - a.m5 * a.m11 * a.m14 - a.m9 * a.m6 * a.m15 + a.m9 * a.m7 * a.m14 + a.m13 * a.m6 * a.m11 - a.m13 * a.m7 * a.m10

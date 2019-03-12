@@ -169,23 +169,31 @@ function Quat.fromDirection(normal, up)
 end
 
 function Quat.conjugate(self, inline)
+	if inline == nil then inline = true end
+
 	local out = inline and self or Quat()
 	return out:set(-self.x, -self.y, -self.z, self.w)
 end
 
 function Quat.add(v1, v2, inline)
+	if inline == nil then inline = true end
+
 	local out = inline and v1 or Quat()
 	out:set(v1.x+v2.x, v1.y+v2.y, v1.z+v2.z, v1.w+v2.w)
 	return out
 end
 
 function Quat.subtract(v1, v2, inline)
+	if inline == nil then inline = true end
+
 	local out = inline and v1 or Quat()
 	out:set(v1.x-v2.x, v1.y-v2.y, v1.z-v2.z, v1.w-v2.w)
 	return out
 end
 
 function Quat.multiply(v1, op, inline)
+	if inline == nil then inline = true end
+
 	local out = inline and v1 or Quat()
 	if type(v1) == "number" then
 		out:set(op.x*v1, op.y*v1, op.z*v1)
@@ -202,6 +210,8 @@ function Quat.multiply(v1, op, inline)
 end
 
 function Quat.divide(v1, op, inline)
+	if inline == nil then inline = true end
+
 	if type(op) ~= "number" then error("must divide by a scalar") end
 	local out = inline and v1 or Quat()
 	out:set(v1.x/op, v1.y/op, v1.z/op, v1.w/op)
@@ -209,29 +219,31 @@ function Quat.divide(v1, op, inline)
 end
 
 function Quat.negate(v, inline)
+	if inline == nil then inline = true end
+
 	local out = inline and v or Quat()
 	out:set(-v.x, -v.y, -v.z, -v.w)
 	return out
 end
 
 function Quat.__add(v1, v2)
-	return Quat.add(v1, v2)
+	return Quat.add(v1, v2, false)
 end
 
 function Quat.__sub(v1, v2)
-	return Quat.subtract(v1, v2)
+	return Quat.subtract(v1, v2, false)
 end
 
 function Quat.__mul(v1, op)
-	return Quat.multiply(v1, op)
+	return Quat.multiply(v1, op, false)
 end
 
 function Quat.__div(v1, op)
-	return Quat.divide(v1, op)
+	return Quat.divide(v1, op, false)
 end
 
 function Quat.__unm(v)
-	return Quat.negate(v)
+	return Quat.negate(v, false)
 end
 
 function Quat.__eq(v1,v2)

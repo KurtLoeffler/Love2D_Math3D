@@ -114,6 +114,8 @@ function Vector3.dot(v1, v2)
 end
 
 function Vector3.cross(v1, v2, inline)
+	if inline == nil then inline = true end
+
 	local out = inline and v1 or Vector3()
 	out:set(
 		v1.y * v2.z - v1.z * v2.y,
@@ -141,18 +143,24 @@ function Vector3.isVector3(arg)
 end
 
 function Vector3.add(v1, v2, inline)
+	if inline == nil then inline = true end
+
 	local out = inline and v1 or Vector3()
 	out:set(v1.x+v2.x, v1.y+v2.y, v1.z+v2.z)
 	return out
 end
 
 function Vector3.subtract(v1, v2, inline)
+	if inline == nil then inline = true end
+
 	local out = inline and v1 or Vector3()
 	Vector3:set(v1.x-v2.x, v1.y-v2.y, v1.z-v2.z)
 	return out
 end
 
 function Vector3.multiplyPoint(v1, matrixOrQuat, inline)
+	if inline == nil then inline = true end
+
 	local out = inline and v1 or Vector3()
 
 	if (math3DTypes.Quat.isQuat(matrixOrQuat)) then
@@ -179,6 +187,8 @@ function Vector3.multiplyPoint(v1, matrixOrQuat, inline)
 end
 
 function Vector3.multiply(v1, op, inline)
+	if inline == nil then inline = true end
+
 	local out = inline and v1 or Vector3()
 	if  type(op) == "cdata" then
 		out:set(v1.x*op.x, v1.y*op.y, v1.z*op.z)
@@ -189,6 +199,8 @@ function Vector3.multiply(v1, op, inline)
 end
 
 function Vector3.divide(v1, op, inline)
+	if inline == nil then inline = true end
+
 	if type(op) ~= "number" then error("must divide by a scalar") end
 	local out = inline and v1 or Vector3()
 	out:set(v1.x/op, v1.y/op, v1.z/op)
@@ -196,29 +208,31 @@ function Vector3.divide(v1, op, inline)
 end
 
 function Vector3.negate(v, inline)
+	if inline == nil then inline = true end
+
 	local out = inline and v or Vector3()
 	out:set(-v.x, -v.y, -v.z)
 	return out
 end
 
 function Vector3.__add(v1, v2)
-	return Vector3.add(v1, v2)
+	return Vector3.add(v1, v2, false)
 end
 
 function Vector3.__sub(v1, v2)
-	return Vector3.subtract(v1, v2)
+	return Vector3.subtract(v1, v2, false)
 end
 
 function Vector3.__mul(v1, op)
-	return Vector3.multiply(v1, op)
+	return Vector3.multiply(v1, op, false)
 end
 
 function Vector3.__div(v1, op)
-	return Vector3.divide(v1, op)
+	return Vector3.divide(v1, op, false)
 end
 
 function Vector3.__unm(v)
-	return Vector3.negate(v)
+	return Vector3.negate(v, false)
 end
 
 function Vector3.__eq(v1,v2)
