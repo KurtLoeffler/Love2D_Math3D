@@ -1,5 +1,9 @@
 
 local ffi = require "ffi"
+
+local cos = math.cos
+local sin = math.sin
+
 ffi.cdef[[
 typedef struct Matrix4 {
 	union {
@@ -218,7 +222,7 @@ function Matrix4.fromTranslation(vector)
 end
 
 function Matrix4.rotate(self, angle, axis)
-	tempMatrix:setAngleAxis(angle, axis)
+	tempMatrix:setFromAngleAxis(angle, axis)
 	self:multiply(tempMatrix, true)
 	return self
 end
