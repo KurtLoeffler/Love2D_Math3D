@@ -90,10 +90,10 @@ function Matrix4.createIdentity()
 	return m
 end
 
-function Matrix4.multiply(a, b, inline)
-	if inline == nil then inline = true end
+function Matrix4.multiply(a, b, mutate)
+	if mutate == nil then mutate = true end
 
-	local out = inline and tempMatrix or Matrix4()
+	local out = mutate and tempMatrix or Matrix4()
 	
 	out.m0  = a.m0  * b.m0 + a.m1  * b.m4 + a.m2  * b.m8  + a.m3  * b.m12
 	out.m1  = a.m0  * b.m1 + a.m1  * b.m5 + a.m2  * b.m9 + a.m3  * b.m13
@@ -112,17 +112,17 @@ function Matrix4.multiply(a, b, inline)
 	out.m14 = a.m12 * b.m2 + a.m13 * b.m6 + a.m14 * b.m10 + a.m15 * b.m14
 	out.m15 = a.m12 * b.m3 + a.m13 * b.m7 + a.m14 * b.m11 + a.m15 * b.m15
 	
-	if inline == true then
+	if mutate == true then
 		a:set(out)
 		return a
 	end
 	return out
 end
 
-function Matrix4.invert(a, inline)
-	if inline == nil then inline = true end
+function Matrix4.invert(a, mutate)
+	if mutate == nil then mutate = true end
 	
-	local out = inline and tempMatrix or Matrix4()
+	local out = mutate and tempMatrix or Matrix4()
 	
 	out.m0  =  a.m5 * a.m10 * a.m15 - a.m5 * a.m11 * a.m14 - a.m9 * a.m6 * a.m15 + a.m9 * a.m7 * a.m14 + a.m13 * a.m6 * a.m11 - a.m13 * a.m7 * a.m10
 	out.m1  = -a.m1 * a.m10 * a.m15 + a.m1 * a.m11 * a.m14 + a.m9 * a.m2 * a.m15 - a.m9 * a.m3 * a.m14 - a.m13 * a.m2 * a.m11 + a.m13 * a.m3 * a.m10
@@ -151,7 +151,7 @@ function Matrix4.invert(a, inline)
 		out.values[i] = out.values[i]*det
 	end
 
-	if inline == true then
+	if mutate == true then
 		a:set(out)
 		return a
 	end

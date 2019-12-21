@@ -107,33 +107,33 @@ function Vector4.isVector4(arg)
 	return ffi.istype("Vector4", arg)
 end
 
-function Vector4.add(v1, v2, inline)
-	if inline == nil then inline = true end
+function Vector4.add(v1, v2, mutate)
+	if mutate == nil then mutate = true end
 
-	local out = inline and v1 or Vector4()
+	local out = mutate and v1 or Vector4()
 	Vector4.set(out, v1.x+v2.x, v1.y+v2.y, v1.z+v2.z, v1.w+v2.w)
 	return out
 end
 
-function Vector4.subtract(v1, v2, inline)
-	if inline == nil then inline = true end
+function Vector4.subtract(v1, v2, mutate)
+	if mutate == nil then mutate = true end
 
-	local out = inline and v1 or Vector4()
+	local out = mutate and v1 or Vector4()
 	Vector4.set(out, v1.x-v2.x, v1.y-v2.y, v1.z-v2.z, v1.w-v2.w)
 	return out
 end
 
-function Vector4.multiplyMatrix(v1, matrix, inline)
-	if inline == nil then inline = true end
+function Vector4.multiplyMatrix(v1, matrix, mutate)
+	if mutate == nil then mutate = true end
 
-	local out = inline and tempVector4 or Vector4()
+	local out = mutate and tempVector4 or Vector4()
 
 	out.x = v1.x * matrix.values[0] + v1.y * matrix.values[4] + v1.z * matrix.values[8]  + v1.w * matrix.values[12]
 	out.y = v1.x * matrix.values[1] + v1.y * matrix.values[5] + v1.z * matrix.values[9] + v1.w * matrix.values[13]
 	out.z = v1.x * matrix.values[2] + v1.y * matrix.values[6] + v1.z * matrix.values[10] + v1.w * matrix.values[14]
 	out.w = v1.x * matrix.values[3] + v1.y * matrix.values[7] + v1.z * matrix.values[11] + v1.w * matrix.values[15]
 
-	if inline == true then
+	if mutate == true then
 		v1:set(out)
 		return v1
 	end
@@ -141,10 +141,10 @@ function Vector4.multiplyMatrix(v1, matrix, inline)
 	return out
 end
 
-function Vector4.multiply(v1, op, inline)
-	if inline == nil then inline = true end
+function Vector4.multiply(v1, op, mutate)
+	if mutate == nil then mutate = true end
 
-	local out = inline and v1 or Vector4()
+	local out = mutate and v1 or Vector4()
 	if type(v1) == "number" then
 		Vector4.set(out, op.x*v1, op.y*v1, op.z*v1, op.w*v1)
 	elseif  type(op) == "cdata" then
@@ -155,19 +155,19 @@ function Vector4.multiply(v1, op, inline)
 	return out
 end
 
-function Vector4.divide(v1, op, inline)
-	if inline == nil then inline = true end
+function Vector4.divide(v1, op, mutate)
+	if mutate == nil then mutate = true end
 
 	if type(op) ~= "number" then error("must divide by a scalar") end
-	local out = inline and v1 or Vector4()
+	local out = mutate and v1 or Vector4()
 	Vector4.set(out, v1.x/op, v1.y/op, v1.z/op, v1.w/op)
 	return out
 end
 
-function Vector4.negate(v, inline)
-	if inline == nil then inline = true end
+function Vector4.negate(v, mutate)
+	if mutate == nil then mutate = true end
 	
-	local out = inline and v or Vector4()
+	local out = mutate and v or Vector4()
 	Vector4.set(-v.x, -v.y, -v.z, -v.w)
 	return out
 end

@@ -113,10 +113,10 @@ function Vector3.dot(v1, v2)
 	return v1.x*v2.x+v1.y*v2.y+v1.z*v2.z
 end
 
-function Vector3.cross(v1, v2, inline)
-	if inline == nil then inline = true end
+function Vector3.cross(v1, v2, mutate)
+	if mutate == nil then mutate = true end
 
-	local out = inline and v1 or Vector3()
+	local out = mutate and v1 or Vector3()
 	out:set(
 		v1.y * v2.z - v1.z * v2.y,
 		v1.z * v2.x - v1.x * v2.z,
@@ -142,26 +142,26 @@ function Vector3.isVector3(arg)
 	return ffi.istype("Vector3", arg)
 end
 
-function Vector3.add(v1, v2, inline)
-	if inline == nil then inline = true end
+function Vector3.add(v1, v2, mutate)
+	if mutate == nil then mutate = true end
 
-	local out = inline and v1 or Vector3()
+	local out = mutate and v1 or Vector3()
 	out:set(v1.x+v2.x, v1.y+v2.y, v1.z+v2.z)
 	return out
 end
 
-function Vector3.subtract(v1, v2, inline)
-	if inline == nil then inline = true end
+function Vector3.subtract(v1, v2, mutate)
+	if mutate == nil then mutate = true end
 
-	local out = inline and v1 or Vector3()
+	local out = mutate and v1 or Vector3()
 	Vector3:set(v1.x-v2.x, v1.y-v2.y, v1.z-v2.z)
 	return out
 end
 
-function Vector3.multiplyPoint(v1, matrixOrQuat, inline)
-	if inline == nil then inline = true end
+function Vector3.multiplyPoint(v1, matrixOrQuat, mutate)
+	if mutate == nil then mutate = true end
 
-	local out = inline and v1 or Vector3()
+	local out = mutate and v1 or Vector3()
 
 	if (math3DTypes.Quat.isQuat(matrixOrQuat)) then
 		tempVector3_1.x = matrixOrQuat.x
@@ -186,10 +186,10 @@ function Vector3.multiplyPoint(v1, matrixOrQuat, inline)
 	return out
 end
 
-function Vector3.multiply(v1, op, inline)
-	if inline == nil then inline = true end
+function Vector3.multiply(v1, op, mutate)
+	if mutate == nil then mutate = true end
 
-	local out = inline and v1 or Vector3()
+	local out = mutate and v1 or Vector3()
 	if  type(op) == "cdata" then
 		out:set(v1.x*op.x, v1.y*op.y, v1.z*op.z)
 	else
@@ -198,19 +198,19 @@ function Vector3.multiply(v1, op, inline)
 	return out
 end
 
-function Vector3.divide(v1, op, inline)
-	if inline == nil then inline = true end
+function Vector3.divide(v1, op, mutate)
+	if mutate == nil then mutate = true end
 
 	if type(op) ~= "number" then error("must divide by a scalar") end
-	local out = inline and v1 or Vector3()
+	local out = mutate and v1 or Vector3()
 	out:set(v1.x/op, v1.y/op, v1.z/op)
 	return out
 end
 
-function Vector3.negate(v, inline)
-	if inline == nil then inline = true end
+function Vector3.negate(v, mutate)
+	if mutate == nil then mutate = true end
 
-	local out = inline and v or Vector3()
+	local out = mutate and v or Vector3()
 	out:set(-v.x, -v.y, -v.z)
 	return out
 end
