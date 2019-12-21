@@ -217,41 +217,8 @@ function Matrix4.fromTranslation(vector)
 	return m
 end
 
-function Matrix4.setFromRotation(self, angle, axis)
-	local l = axis:getLength()
-	
-	if l == 0 then
-		return self
-	end
-	
-	local x, y, z = axis.x / l, axis.y / l, axis.z / l
-	local c = math.cos(angle)
-	local s = math.sin(angle)
-	
-	self:set(Matrix4.identity)
-	
-	self.m0  = x * x * (1 - c) + c
-	
-	self.m1  = y * x * (1 - c) + z * s
-	self.m2  = x * z * (1 - c) - y * s
-	self.m4  = x * y * (1 - c) - z * s
-	self.m5  = y * y * (1 - c) + c
-	self.m6  = y * z * (1 - c) + x * s
-	self.m8  = x * z * (1 - c) + y * s
-	self.m9 = y * z * (1 - c) - x * s
-	self.m10 = z * z * (1 - c) + c
-	
-	return self
-end
-
-function Matrix4.fromRotation(angle, axis)
-	local m = Matrix4()
-	m:setFromRotation(angle, axis)
-	return m
-end
-
 function Matrix4.rotate(self, angle, axis)
-	tempMatrix:setFromRotation(angle, axis)
+	tempMatrix:setAngleAxis(angle, axis)
 	self:multiply(tempMatrix, true)
 	return self
 end

@@ -157,7 +157,7 @@ function Quat.setFromDirection(self, normal, up)
 	tempVector3_1:normalize()
 	tempVector3_2:set(up)
 	tempVector3_2:cross(tempVector3_1, true)
-	local d = u:dot(tempVector3_1)
+	local d = up:dot(tempVector3_1)
 	self:set(tempVector3_2.x, tempVector3_2.y, tempVector3_2.z, d + 1)
 	return self
 end
