@@ -193,7 +193,7 @@ function Matrix4.setFromAngleAxis(self, angle, x, y, z)
 		return self
 	end
 	tempVector3_1:set(x, y, z)
-	return self:setFromAngleAxis(tempVector3_1)
+	return self:setFromAngleAxis(angle, tempVector3_1)
 end
 
 function Matrix4.fromAngleAxis(angle, axisOrX, y, z)
@@ -215,9 +215,9 @@ function Matrix4.setFromTranslation(self, x, y, z)
 	return self
 end
 
-function Matrix4.fromTranslation(vector)
+function Matrix4.fromTranslation(x, y, z)
 	local m = Matrix4()
-	m:setFromTranslation(vector)
+	m:setFromTranslation(x, y, z)
 	return m
 end
 
