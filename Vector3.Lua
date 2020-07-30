@@ -10,6 +10,7 @@ typedef struct Vector3 {
 
 local Vector3 = {}
 setmetatable(Vector3, Vector3)
+Vector3.__index = Vector3
 
 local math3DTypes
 local tempVector4_1
