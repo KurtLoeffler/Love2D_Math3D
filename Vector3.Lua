@@ -32,25 +32,23 @@ function Vector3.copy(v)
 	return out
 end
 
-function Vector3.__index(t, k)
-	if k == "length" then
-		return Vector3.getLength(t)
-	elseif k == "normalized" then
-		return Vector3.getNormalized(t)
-	elseif k == "angle" then
-		return Vector3.getAngle(t)
-	elseif k == "lengthSquared" then
-		return Vector3.getLengthSquared(t)
-	end
-	return rawget(Vector3, k)
-end
-
 function Vector3.getLength(v)
 	return math.sqrt(v.x*v.x+v.y*v.y+v.z*v.z)
 end
 
 function Vector3.getLengthSquared(v)
 	return v.x*v.x+v.y*v.y+v.z*v.z
+end
+
+function Vector3.getDistance(v1, v2)
+	return math.sqrt(vector3.getDistanceSquared(v1, v2))
+end
+
+function Vector3.getDistanceSquared(v1, v2)
+	local x1, y1, z1 = v1.x, v1.y, v1.z
+	local x2, y2, z2 = v2.x, v2.y, v2.z
+	local x, y, z = x1-x2, y1-y2, z1-z2
+	return x*x+y*y+z*z
 end
 
 function Vector3.getNormalized(v)
@@ -67,32 +65,6 @@ function Vector3.normalize(v)
 		v.x = v.x/length v.y = v.y/length v.z = v.z/length
 	end
 	return v
-end
-
-function Vector3.getAngle(v)
-	return math.atan2(v.y, v.x, v/z)
-end
-
-function Vector3.__newindex(t, k, v)
-	if k == "length" then
-		local res = t.normalized*v
-		t.x = res.x
-		t.y = res.y
-		t.z = res.z
-		return
-	end
-	if k == "angle" then
-		local res = t:angled(v)
-		t.x = res.x
-		t.y = res.y
-		t.z = res.z
-		return
-	end
-	if type(t) == "cdata" then
-		error("Cannot assign a new property '" .. k .. "' to a Vector3") 
-	else
-		rawset(t,k,v)
-	end
 end
 
 function Vector3.angled(v, angle)
