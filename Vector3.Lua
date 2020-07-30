@@ -96,6 +96,15 @@ function Vector3.cross(v1, v2, mutate)
 	return out
 end
 
+function Vector3.project(point, onNormal, mutate)
+	if mutate == nil then mutate = true end
+	local dot = point:dot(onNormal)
+	local out = mutate and point or Vector3()
+	out:set(onNormal)
+	out:multiply(dot)
+	return out
+end
+
 local iteraxes_lookup = {
 	xy = {"x","y"},
 	yx = {"y","x"},
