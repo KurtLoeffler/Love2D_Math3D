@@ -59,7 +59,7 @@ function Vector3.getNormalized(v)
 end
 
 function Vector3.normalize(v)
-	local length = v.length
+	local length = v:getLength()
 	if length == 0 then
 		v.x = 0 v.y = 0 v.z = 0
 	else
@@ -69,13 +69,13 @@ function Vector3.normalize(v)
 end
 
 function Vector3.angled(v, angle)
-	local length = v.length
+	local length = v:getLength()
 	return Vector3(math.cos(angle)*length, math.sin(angle)*length, math.tan(angle)*length)
 end
 
 function Vector3.trim(v, mag)
-	if v.length < mag then return v end
-	return v.normalized*mag
+	if v:getLength() < mag then return v end
+	return v:getNormalized()*mag
 end
 
 function Vector3.unpack(v)
