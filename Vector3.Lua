@@ -42,7 +42,7 @@ function Vector3.getLengthSquared(v)
 end
 
 function Vector3.getDistance(v1, v2)
-	return math.sqrt(vector3.getDistanceSquared(v1, v2))
+	return math.sqrt(Vector3.getDistanceSquared(v1, v2))
 end
 
 function Vector3.getDistanceSquared(v1, v2)
