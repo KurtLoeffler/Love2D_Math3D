@@ -136,7 +136,7 @@ function Vector3.subtract(v1, v2, mutate)
 	if mutate == nil then mutate = true end
 
 	local out = mutate and v1 or Vector3()
-	Vector3:set(v1.x-v2.x, v1.y-v2.y, v1.z-v2.z)
+	out:set(v1.x-v2.x, v1.y-v2.y, v1.z-v2.z)
 	return out
 end
 
