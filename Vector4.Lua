@@ -145,12 +145,10 @@ function Vector4.multiply(v1, op, mutate)
 	if mutate == nil then mutate = true end
 
 	local out = mutate and v1 or Vector4()
-	if type(v1) == "number" then
-		Vector4.set(out, op.x*v1, op.y*v1, op.z*v1, op.w*v1)
-	elseif  type(op) == "cdata" then
-		Vector4.set(out, v1.x*op.x, v1.y*op.y, v1.z*op.z, v1.w*op.w)
+	if  type(op) == "cdata" then
+		out:set(v1.x*op.x, v1.y*op.y, v1.z*op.z, v1.w*op.w)
 	else
-		Vector4.set(out, v1.x*op, v1.y*op, v1.z*op, v1.w*op)
+		out:set(v1.x*op, v1.y*op, v1.z*op, v1.w*op)
 	end
 	return out
 end
@@ -160,7 +158,7 @@ function Vector4.divide(v1, op, mutate)
 
 	if type(op) ~= "number" then error("must divide by a scalar") end
 	local out = mutate and v1 or Vector4()
-	Vector4.set(out, v1.x/op, v1.y/op, v1.z/op, v1.w/op)
+	out:set(v1.x/op, v1.y/op, v1.z/op, v1.w/op)
 	return out
 end
 
