@@ -254,4 +254,11 @@ Vector3.down = Vector3_T(0, -1, 0)
 Vector3.forward = Vector3_T(0, 0, 1)
 Vector3.back = Vector3_T(0, 0, -1)
 
+Vector3.unitX = Vector3.right
+Vector3.nUnitX = Vector3.left
+Vector3.unitY = Vector3.up
+Vector3.nUnitY = Vector3.down
+Vector3.unitZ = Vector3.forward
+Vector3.nUnitZ = Vector3.back
+
 return Vector3_T
