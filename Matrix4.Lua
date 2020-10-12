@@ -176,6 +176,8 @@ function Matrix4.setFromAngleAxis(self, angle, x, y, z)
 	if math3DTypes.Vector3.isVector3(x) then
 		local axis = x
 		local l = axis:getLength()
+
+		self:set(Matrix4.identity)
 		
 		if l == 0 then
 			return self
@@ -184,8 +186,6 @@ function Matrix4.setFromAngleAxis(self, angle, x, y, z)
 		local x, y, z = axis.x / l, axis.y / l, axis.z / l
 		local c = math.cos(angle)
 		local s = math.sin(angle)
-		
-		self:set(Matrix4.identity)
 		
 		self.m0  = x * x * (1 - c) + c
 		
