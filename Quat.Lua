@@ -19,6 +19,8 @@ local tempVector3_2
 local tempVector3_3
 local tempQuat
 
+local acos, sqrt = math.acos, math.sqrt
+
 function Quat.set(self, x, y, z, w)
 	if Quat.isQuat(x) then
 		ffi.copy(self, x, ffi.sizeof(self))
@@ -46,7 +48,7 @@ function Quat.__index(t, k)
 end
 
 function Quat.getLength(v)
-	return math.sqrt(v.x*v.x+v.y*v.y+v.z*v.z*v.w)
+	return sqrt(v.x*v.x+v.y*v.y+v.z*v.z*v.w)
 end
 
 function Quat.getLengthSquared(v)
@@ -97,24 +99,23 @@ end
 function Quat.toAngleAxis(self)
 	
 	if self.w > 1 or self.w < -1 then
-		self = tempVector3_1:set(self)
 		self:normalize()
 	end
 
 	local x, y, z
-	local angle = 2 * acos(self.w)
-	local s     = sqrt(1 - self.w * self.w)
+	local angle = 2*acos(self.w)
+	local s = sqrt(1-self.w*self.w)
 
 	if s < 2.2204460492503131e-16 then
 		x = self.x
 		y = self.y
 		z = self.z
 	else
-		x = self.x / s
-		y = self.y / s
-		z = self.z / s
+		x = self.x/s
+		y = self.y/s
+		z = self.z/s
 	end
-
+	
 	return angle, x, y, z
 end
 

@@ -177,7 +177,7 @@ function Matrix4.setFromAngleAxis(self, angle, x, y, z)
 		local axis = x
 		local l = axis:getLength()
 		if l == 0 then
-			return self:set(Quat.identity)
+			return self:set(Matrix4.identity)
 		end
 
 		x = axis.x / l
