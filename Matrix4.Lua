@@ -176,20 +176,28 @@ function Matrix4.setFromAngleAxis(self, angle, x, y, z)
 	if math3DTypes.Vector3.isVector3(x) then
 		local axis = x
 		local l = axis:getLength()
+		
 		if l == 0 then
-			return self:set(Matrix4.identity)
+			return self
 		end
-
-		x = axis.x / l
-		local y, z = axis.y/l, axis.z/l
-		local c = cos(angle)
-		local s = sin(angle)
-
-		self:set(
-			x*x*(1-c)+c,   y*x*(1-c)+z*s, x*z*(1-c)-y*s, 0,
-			x*y*(1-c)-z*s, y*y*(1-c)+c,   y*z*(1-c)+x*s, 0,
-			x*z*(1-c)+y*s, y*z*(1-c)-x*s, z*z*(1-c)+c,   0,
-			0, 0, 0, 1)
+		
+		local x, y, z = axis.x / l, axis.y / l, axis.z / l
+		local c = math.cos(angle)
+		local s = math.sin(angle)
+		
+		self:set(Matrix4.identity)
+		
+		self.m0  = x * x * (1 - c) + c
+		
+		self.m1  = y * x * (1 - c) + z * s
+		self.m2  = x * z * (1 - c) - y * s
+		self.m4  = x * y * (1 - c) - z * s
+		self.m5  = y * y * (1 - c) + c
+		self.m6  = y * z * (1 - c) + x * s
+		self.m8  = x * z * (1 - c) + y * s
+		self.m9 = y * z * (1 - c) - x * s
+		self.m10 = z * z * (1 - c) + c
+		
 		return self
 	end
 	tempVector3_1:set(x, y, z)
