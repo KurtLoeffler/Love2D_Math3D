@@ -210,8 +210,7 @@ function Matrix4.fromAngleAxis(angle, axisOrX, y, z)
 	return out
 end
 
-function Matrix4.setFromTranslation(self, x, y, z)
-	self:set(Matrix4.identity)
+function Matrix4.setTranslation(self, x, y, z)
 	if Vector3.isVector3(x) then
 		x, y, z = x:unpack()
 	end
@@ -220,6 +219,12 @@ function Matrix4.setFromTranslation(self, x, y, z)
 	self.m13 = y
 	self.m14 = z
 	
+	return self
+end
+
+function Matrix4.setFromTranslation(self, x, y, z)
+	self:set(Matrix4.identity)
+	self:setTranslation(x, y, z)
 	return self
 end
 
