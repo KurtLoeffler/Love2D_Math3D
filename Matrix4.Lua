@@ -3,30 +3,27 @@ local ffi = require "ffi"
 
 local cos = math.cos
 local sin = math.sin
+local tan = math.tan
+local rad = math.rad
 
 ffi.cdef[[
 typedef struct Matrix4 {
-	union {
-		struct {
-			double m0;
-			double m1;
-			double m2;
-			double m3;
-			double m4;
-			double m5;
-			double m6;
-			double m7;
-			double m8;
-			double m9;
-			double m10;
-			double m11;
-			double m12;
-			double m13;
-			double m14;
-			double m15;
-		};
-		double values[16];
-	};
+	double m0;
+	double m1;
+	double m2;
+	double m3;
+	double m4;
+	double m5;
+	double m6;
+	double m7;
+	double m8;
+	double m9;
+	double m10;
+	double m11;
+	double m12;
+	double m13;
+	double m14;
+	double m15;
 } Matrix4;
 ]]
 
@@ -37,22 +34,6 @@ local math3DTypes
 local tempVector3_1
 local tempMatrix
 
-function Matrix4.__index(t, k)
-	if type(k) == "number" then
-		return t.values[k-1]
-	end
-
-	return rawget(t, k)
-end
-
-function Matrix4.__newindex(t, k, v)
-	if type(k) == "number" then
-		t.values[k-1] = v
-	end
-
-	rawset(t, k, v)
-end
-
 function Matrix4.set(self,
 	v0, v1, v2, v3,
 	v4, v5, v6, v7,
@@ -62,7 +43,7 @@ function Matrix4.set(self,
 		ffi.copy(self, v0, ffi.sizeof(self))
 	else
 		self.m0 = v0 self.m1 = v1 self.m2 = v2 self.m3 = v3
-		self.m4 = v4 self.m5 = v5 self.m7 = v7 self.m7 = v7
+		self.m4 = v4 self.m5 = v5 self.m6 = v6 self.m7 = v7
 		self.m8 = v8 self.m9 = v9 self.m10 = v10 self.m11 = v11
 		self.m12 = v12 self.m13 = v13 self.m14 = v14 self.m15 = v15
 	end
@@ -76,9 +57,10 @@ function Matrix4.copy(self)
 end
 
 function Matrix4.fillTable(self, t)
-	for i=1, 16 do
-		t[i] = self.values[i-1]
-	end
+	t[1], t[2], t[3], t[4] = self.m0, self.m1, self.m2, self.m3
+	t[5], t[6], t[7], t[8] = self.m4, self.m5, self.m6, self.m7
+	t[9], t[10], t[11], t[12] = self.m8, self.m9, self.m10, self.m11
+	t[13], t[14], t[15], t[16] = self.m12, self.m13, self.m14, self.m15
 end
 
 function Matrix4.__index(t, k)
@@ -151,9 +133,10 @@ function Matrix4.invert(a, mutate)
 
 	det = 1 / det
 
-	for i = 0, 15 do
-		out.values[i] = out.values[i]*det
-	end
+	out.m0, out.m1, out.m2, out.m3 = out.m0*det, out.m1*det, out.m2*det, out.m3*det
+	out.m4, out.m5, out.m6, out.m7 = out.m4*det, out.m5*det, out.m6*det, out.m7*det
+	out.m8, out.m9, out.m10, out.m11 = out.m8*det, out.m9*det, out.m10*det, out.m11*det
+	out.m12, out.m13, out.m14, out.m15 = out.m12*det, out.m13*det, out.m14*det, out.m15*det
 
 	if mutate == true then
 		a:set(out)
@@ -166,48 +149,16 @@ function Matrix4.setFromQuat(self, quat)
 	return self:setFromAngleAxis(quat:toAngleAxis())
 end
 
-function Matrix4.fromQuat(angle, quat)
+function Matrix4.fromQuat(quat)
 	local out = Matrix4()
 	out:setFromQuat(quat)
 	return out
 end
 
-function Matrix4.setFromAngleAxis(self, angle, x, y, z)
-	if math3DTypes.Vector3.isVector3(x) then
-		local axis = x
-		local l = axis:getLength()
-
-		self:set(Matrix4.identity)
-		
-		if l == 0 then
-			return self
-		end
-		
-		local x, y, z = axis.x / l, axis.y / l, axis.z / l
-		local c = math.cos(angle)
-		local s = math.sin(angle)
-		
-		self.m0  = x * x * (1 - c) + c
-		
-		self.m1  = y * x * (1 - c) + z * s
-		self.m2  = x * z * (1 - c) - y * s
-		self.m4  = x * y * (1 - c) - z * s
-		self.m5  = y * y * (1 - c) + c
-		self.m6  = y * z * (1 - c) + x * s
-		self.m8  = x * z * (1 - c) + y * s
-		self.m9 = y * z * (1 - c) - x * s
-		self.m10 = z * z * (1 - c) + c
-		
-		return self
-	end
-	tempVector3_1:set(x, y, z)
-	return self:setFromAngleAxis(angle, tempVector3_1)
-end
-
-function Matrix4.fromAngleAxis(angle, axisOrX, y, z)
-	local out = Matrix4()
-	out:setFromAngleAxis(angle, axisOrX, y, z)
-	return out
+function Matrix4.translate(self, x, y, z)
+	tempMatrix:setFromTranslation(x, y, z)
+	self:multiply(tempMatrix, true)
+	return self
 end
 
 function Matrix4.setTranslation(self, x, y, z)
@@ -240,17 +191,69 @@ function Matrix4.rotate(self, angle, axis)
 	return self
 end
 
-function Matrix4.setFromScale(self, vector)
-	self:set(Matrix4.identity)
-	self.m0  = vector.x
-	self.m5  = vector.y
-	self.m10 = vector.z
+function Matrix4.setFromAngleAxis(self, angle, x, y, z)
+	if math3DTypes.Vector3.isVector3(x) then
+		local axis = x
+		local l = axis:getLength()
+
+		self:set(Matrix4.identity)
+		
+		if l == 0 then
+			return self
+		end
+		
+		local x, y, z = axis.x / l, axis.y / l, axis.z / l
+		local c = cos(angle)
+		local s = sin(angle)
+		
+		self.m0  = x * x * (1 - c) + c
+		
+		self.m1  = y * x * (1 - c) + z * s
+		self.m2  = x * z * (1 - c) - y * s
+		self.m4  = x * y * (1 - c) - z * s
+		self.m5  = y * y * (1 - c) + c
+		self.m6  = y * z * (1 - c) + x * s
+		self.m8  = x * z * (1 - c) + y * s
+		self.m9 = y * z * (1 - c) - x * s
+		self.m10 = z * z * (1 - c) + c
+		
+		return self
+	end
+	tempVector3_1:set(x, y, z)
+	return self:setFromAngleAxis(angle, tempVector3_1)
+end
+
+function Matrix4.fromAngleAxis(angle, axisOrX, y, z)
+	local out = Matrix4()
+	out:setFromAngleAxis(angle, axisOrX, y, z)
+	return out
+end
+
+function Matrix4.scale(self, x, y, z)
+	tempMatrix:setFromScale(x, y, z)
+	self:multiply(tempMatrix, true)
 	return self
 end
 
-function Matrix4.fromScale(vector)
+function Matrix4.setScale(self, x, y, z)
+	if Vector3.isVector3(x) then
+		x, y, z = x:unpack()
+	end
+	self.m0 = x
+	self.m5 = y
+	self.m10 = z
+	return self
+end
+
+function Matrix4.setFromScale(self, x, y, z)
+	self:set(Matrix4.identity)
+	self:setScale(x, y, z)
+	return self
+end
+
+function Matrix4.fromScale(x, y, z)
 	local m = Matrix4()
-	m:setFromScale(vector)
+	m:setFromScale(x, y, z)
 	return m
 end
 
@@ -258,7 +261,7 @@ function Matrix4.setPerspective(self, fovy, aspect, near, far)
 	assert(aspect ~= 0)
 	assert(near   ~= far)
 
-	local t = math.tan(math.rad(fovy) / 2)
+	local t = tan(rad(fovy) / 2)
 	self:set(Matrix4.default)
 	self.m0 =  1 / (t * aspect)
 	self.m5 =  1 / t
@@ -278,9 +281,9 @@ end
 
 function Matrix4.unpack(v)
 	return
-	v.m0, v.m1, v.m2, v.m3, 
-	v.m4, v.m5, v.m6, v.m7, 
-	v.m8, v.m9, v.m10, v.m11, 
+	v.m0, v.m1, v.m2, v.m3,
+	v.m4, v.m5, v.m6, v.m7,
+	v.m8, v.m9, v.m10, v.m11,
 	v.m12, v.m13, v.m14, v.m15
 end
 
@@ -295,18 +298,18 @@ end
 function Matrix4.__eq(v1, v2)
 	if (not ffi.istype("Matrix4",v2)) or (not ffi.istype("Matrix4",v1)) then return false end
 	return
-	v1.m0 == v2.m0 and v1.m1 == v2.m1 and v1.m2 == v2.m2 and v1.m3 == v2.m3 and 
-	v1.m4 == v2.m4 and v1.m5 == v2.m5 and v1.m6 == v2.m6 and v1.m7 == v2.m7 and 
-	v1.m8 == v2.m8 and v1.m9 == v2.m9 and v1.m10 == v2.m10 and v1.m11 == v2.m11 and 
+	v1.m0 == v2.m0 and v1.m1 == v2.m1 and v1.m2 == v2.m2 and v1.m3 == v2.m3 and
+	v1.m4 == v2.m4 and v1.m5 == v2.m5 and v1.m6 == v2.m6 and v1.m7 == v2.m7 and
+	v1.m8 == v2.m8 and v1.m9 == v2.m9 and v1.m10 == v2.m10 and v1.m11 == v2.m11 and
 	v1.m12 == v2.m12 and v1.m13 == v2.m13 and v1.m14 == v2.m14 and v1.m15 == v2.m15
 end
 
 function Matrix4.__tostring(t)
 	return string.format(
 		"(%.4f, %.4f, %.4f, %.4f\n%.4f, %.4f, %.4f, %.4f\n%.4f, %.4f, %.4f, %.4f\n%.4f, %.4f, %.4f, %.4f)",
-		t.m0, t.m1, t.m2, t.m3, 
-		t.m4, t.m5, t.m6, t.m7, 
-		t.m8, t.m9, t.m10, t.m11, 
+		t.m0, t.m1, t.m2, t.m3,
+		t.m4, t.m5, t.m6, t.m7,
+		t.m8, t.m9, t.m10, t.m11,
 		t.m12, t.m13, t.m14, t.m15)
 end
 
