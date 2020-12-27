@@ -28,7 +28,7 @@ function Vector3.set(self, x, y, z)
 end
 
 function Vector3.copy(v)
-	out = Vector3()
+	local out = Vector3()
 	ffi.copy(out, v, ffi.sizeof(v))
 	return out
 end

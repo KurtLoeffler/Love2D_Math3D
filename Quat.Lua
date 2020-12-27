@@ -31,7 +31,7 @@ function Quat.set(self, x, y, z, w)
 end
 
 function Quat.copy(v)
-	out = Quat()
+	local out = Quat()
 	ffi.copy(out, v, ffi.sizeof(v))
 	return out
 end
@@ -128,7 +128,7 @@ function Quat.setFromAngles(self, x, y, z)
 		self:multiply(tempQuat, true)
 		return self
 	end
-	return self:setFromAngles(angle, x.x, x.y, x.z)
+	return self:setFromAngles(x.x, x.y, x.z)
 end
 
 function Quat.fromAngles(x, y, z)
@@ -274,8 +274,6 @@ function Quat.initialize(types)
 	tempVector3_3 = types.Vector3()
 	tempQuat = types.Quat()
 end
-
-
 
 Quat_T = ffi.metatype("Quat", Quat)
 Quat.default = Quat_T()

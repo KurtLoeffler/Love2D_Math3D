@@ -25,7 +25,7 @@ function Vector4.set(self, x, y, z, w)
 end
 
 function Vector4.copy(v)
-	out = Vector4()
+	local out = Vector4()
 	ffi.copy(out, v, ffi.sizeof(v))
 	return out
 end
@@ -211,10 +211,11 @@ end
 
 function Vector4.initialize(types)
 	math3DTypes = types
+	tempVector4 = types.Vector4()
 end
 
 Vector4_T = ffi.metatype("Vector4", Vector4)
-tempVector4 = Vector4_T()
+
 Vector4.default = Vector4_T()
 Vector4.one = Vector4_T(1, 1, 1, 1)
 

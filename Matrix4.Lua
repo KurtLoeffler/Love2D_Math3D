@@ -51,7 +51,7 @@ function Matrix4.set(self,
 end
 
 function Matrix4.copy(self)
-	out = Matrix4()
+	local out = Matrix4()
 	ffi.copy(out, self, ffi.sizeof(self))
 	return out
 end
@@ -162,7 +162,7 @@ function Matrix4.translate(self, x, y, z)
 end
 
 function Matrix4.setTranslation(self, x, y, z)
-	if Vector3.isVector3(x) then
+	if math3DTypes.Vector3.isVector3(x) then
 		x, y, z = x:unpack()
 	end
 
@@ -236,7 +236,7 @@ function Matrix4.scale(self, x, y, z)
 end
 
 function Matrix4.setScale(self, x, y, z)
-	if Vector3.isVector3(x) then
+	if math3DTypes.Vector3.isVector3(x) then
 		x, y, z = x:unpack()
 	end
 	self.m0 = x
@@ -326,11 +326,11 @@ end
 function Matrix4.initialize(types)
 	math3DTypes = types
 	tempVector3_1 = types.Vector3()
+	tempMatrix = types.Matrix4()
 end
 
 Matrix4_T = ffi.metatype("Matrix4", Matrix4)
 
-tempMatrix = Matrix4_T()
 Matrix4.identity = Matrix4_T.createIdentity()
 Matrix4.default = Matrix4_T()
 
