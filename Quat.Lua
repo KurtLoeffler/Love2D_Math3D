@@ -13,10 +13,8 @@ local Quat = {}
 setmetatable(Quat, Quat)
 
 local math3DTypes
-local tempVector4_1
 local tempVector3_1
 local tempVector3_2
-local tempVector3_3
 local tempQuat
 
 local acos, sqrt = math.acos, math.sqrt
@@ -268,10 +266,8 @@ end
 
 function Quat.initialize(types)
 	math3DTypes = types
-	tempVector4_1 = types.Vector4()
 	tempVector3_1 = types.Vector3()
 	tempVector3_2 = types.Vector3()
-	tempVector3_3 = types.Vector3()
 	tempQuat = types.Quat()
 end
 

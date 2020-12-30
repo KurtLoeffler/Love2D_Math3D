@@ -76,10 +76,11 @@ function Matrix4.createIdentity()
 	return m
 end
 
+local tempMultiplyMatrix
 function Matrix4.multiply(a, b, mutate)
 	if mutate == nil then mutate = true end
 
-	local out = mutate and tempMatrix or Matrix4()
+	local out = mutate and tempMultiplyMatrix or Matrix4()
 	
 	out.m0  = a.m0  * b.m0 + a.m1  * b.m4 + a.m2  * b.m8  + a.m3  * b.m12
 	out.m1  = a.m0  * b.m1 + a.m1  * b.m5 + a.m2  * b.m9 + a.m3  * b.m13
@@ -105,10 +106,11 @@ function Matrix4.multiply(a, b, mutate)
 	return out
 end
 
+local tempInvertMatrix
 function Matrix4.invert(a, mutate)
 	if mutate == nil then mutate = true end
 	
-	local out = mutate and tempMatrix or Matrix4()
+	local out = mutate and tempInvertMatrix or Matrix4()
 	
 	out.m0  =  a.m5 * a.m10 * a.m15 - a.m5 * a.m11 * a.m14 - a.m9 * a.m6 * a.m15 + a.m9 * a.m7 * a.m14 + a.m13 * a.m6 * a.m11 - a.m13 * a.m7 * a.m10
 	out.m1  = -a.m1 * a.m10 * a.m15 + a.m1 * a.m11 * a.m14 + a.m9 * a.m2 * a.m15 - a.m9 * a.m3 * a.m14 - a.m13 * a.m2 * a.m11 + a.m13 * a.m3 * a.m10
@@ -185,8 +187,8 @@ function Matrix4.fromTranslation(x, y, z)
 	return m
 end
 
-function Matrix4.rotate(self, angle, axis)
-	tempMatrix:setFromAngleAxis(angle, axis)
+function Matrix4.rotate(self, angle, x, y, z)
+	tempMatrix:setFromAngleAxis(angle, x, y, z)
 	self:multiply(tempMatrix, true)
 	return self
 end
@@ -223,9 +225,9 @@ function Matrix4.setFromAngleAxis(self, angle, x, y, z)
 	return self:setFromAngleAxis(angle, tempVector3_1)
 end
 
-function Matrix4.fromAngleAxis(angle, axisOrX, y, z)
+function Matrix4.fromAngleAxis(angle, x, y, z)
 	local out = Matrix4()
-	out:setFromAngleAxis(angle, axisOrX, y, z)
+	out:setFromAngleAxis(angle, x, y, z)
 	return out
 end
 
@@ -327,6 +329,8 @@ function Matrix4.initialize(types)
 	math3DTypes = types
 	tempVector3_1 = types.Vector3()
 	tempMatrix = types.Matrix4()
+	tempMultiplyMatrix = types.Matrix4()
+	tempInvertMatrix = types.Matrix4()
 end
 
 Matrix4_T = ffi.metatype("Matrix4", Matrix4)
