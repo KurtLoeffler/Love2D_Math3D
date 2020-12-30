@@ -128,10 +128,10 @@ function Vector4.multiplyMatrix(v1, matrix, mutate)
 
 	local out = mutate and tempVector4 or Vector4()
 
-	out.x = v1.x * matrix.values[0] + v1.y * matrix.values[4] + v1.z * matrix.values[8]  + v1.w * matrix.values[12]
-	out.y = v1.x * matrix.values[1] + v1.y * matrix.values[5] + v1.z * matrix.values[9] + v1.w * matrix.values[13]
-	out.z = v1.x * matrix.values[2] + v1.y * matrix.values[6] + v1.z * matrix.values[10] + v1.w * matrix.values[14]
-	out.w = v1.x * matrix.values[3] + v1.y * matrix.values[7] + v1.z * matrix.values[11] + v1.w * matrix.values[15]
+	out.x = v1.x * matrix.m0 + v1.y * matrix.m4 + v1.z * matrix.m8  + v1.w * matrix.m12
+	out.y = v1.x * matrix.m1 + v1.y * matrix.m5 + v1.z * matrix.m9 + v1.w * matrix.m13
+	out.z = v1.x * matrix.m2 + v1.y * matrix.m6 + v1.z * matrix.m10 + v1.w * matrix.m14
+	out.w = v1.x * matrix.m3 + v1.y * matrix.m7 + v1.z * matrix.m11 + v1.w * matrix.m15
 
 	if mutate == true then
 		v1:set(out)
