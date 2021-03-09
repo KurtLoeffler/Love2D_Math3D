@@ -11,6 +11,7 @@ typedef struct Vector4 {
 
 local Vector4 = {}
 setmetatable(Vector4, Vector4)
+Vector4.__index = Vector4
 
 local math3DTypes
 local tempVector4
@@ -30,19 +31,6 @@ function Vector4.copy(v)
 	return out
 end
 
-function Vector4.__index(t, k)
-	if k == "length" then
-		return Vector4.getLength(t)
-	elseif k == "normalized" then
-		return Vector4.getNormalized(t)
-	elseif k == "angle" then
-		return Vector4.getAngle(t)
-	elseif k == "squaredLength" then
-		return Vector4.getLengthSquared(t)
-	end
-	return rawget(Vector4, k)
-end
-
 function Vector4.getLength(v)
 	return math.sqrt(v.x*v.x+v.y*v.y+v.z*v.z+v.w*v.w)
 end
@@ -52,20 +40,13 @@ function Vector4.getLengthSquared(v)
 end
 
 function Vector4.getNormalized(v)
-	local length = v.length
-	if length == 0 then return Vector4(0,0,0) end
-	return Vector4(v.x/length, v.y/length, v.z/length, v.w/length)
-end
-
-function Vector4.getNormalized(v)
-	local length = v.length
 	local out = v:copy()
 	out:normalize()
 	return out
 end
 
 function Vector4.normalize(v)
-	local length = v.length
+	local length = v:getLength()
 	if length == 0 then
 		v.x = 0 v.y = 0 v.z = 0 v.w = 0
 	else
@@ -74,25 +55,9 @@ function Vector4.normalize(v)
 	return v
 end
 
-function Vector4.__newindex(t, k, v)
-	if k == "length" then
-		local res = t.normalized*v
-		t.x = res.x
-		t.y = res.y
-		t.z = res.z
-		t.w = res.w
-		return
-	end
-	if type(t) == "cdata" then
-		error("Cannot assign a new property '" .. k .. "' to a Vector4") 
-	else
-		rawset(t,k,v)
-	end
-end
-
 function Vector4.trim(v, mag)
-	if v.length < mag then return v end
-	return v.normalized*mag
+	if v:getLength() < mag then return v end
+	return v:getNormalized()*mag
 end
 
 function Vector4.unpack(v)
